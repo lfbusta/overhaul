@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { Reset } from 'styled-reset';
 import { ThemeProvider } from 'styled-components';
-import GlobalStyle from './GlobalStyle';
-import Clocks from './pages/Clocks';
+import GlobalStyle from './styles/GlobalStyle';
+import Mission from './pages/Mission';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import cyberpunk from './themes/cyberpunk';
@@ -19,7 +19,7 @@ function App(): ReactElement {
         {/* Actaul app. */}
         <Switch>
           <Route exact path="/">
-            <Clocks />
+            <Mission />
           </Route>
           <Route exact path="/login">
             <Login />

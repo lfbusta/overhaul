@@ -16,13 +16,13 @@ const db = firebase.firestore();
 
 // Player Groups
 
-// type PlayerGroup = {
-//   displayName: string,
-//   gameMasterId: string,
-//   playerIds: Array<string>,
-//   clocks: {[corporationName: string]: number},
-//   missionIds: Array<string>,
-// }
+type PlayerGroup = {
+  displayName: string,
+  gameMasterId: string,
+  playerIds: Array<string>,
+  clocks: {[corporationName: string]: number},
+  missionIds: Array<string>,
+}
 
 type CreatePlayerGroupProps = {
   gameMasterId: string,
@@ -37,50 +37,59 @@ function createPlayerGroup(props: CreatePlayerGroupProps): any {
   });
 }
 
-function getPlayerGroup(playerGroupId: string): Promise<any> {
-  return db.collection('playerGroups').doc(playerGroupId).get();
+async function fetchPlayerGroup(playerGroupId: string): Promise<any> {
+  const output = await db.collection('playerGroups').doc(playerGroupId).get();
+  if (output.exists) return output.data();
+  console.error(`Couldn't fetch playerGroup with id: ${playerGroupId}`);
+  return null;
 }
 
 // Missions
 
-// type Mission = {
-//   displayName: string,
-//   actionClock: number,
-//   legworkClock: number,
-//   missionDirectives: {[directiveDescription: string]: boolean},
-// }
+type Mission = {
+  displayName: string,
+  description: string,
+  actionClock: number,
+  legworkClock: number,
+  directives: {[description: string]: boolean},
+}
 
-// type CreateMissionProps = {
-//   actionClock: number,
-//   legworkClock: number,
-//   directives: {[condition: string]: boolean},
-// }
+type CreateMissionProps = {
+  actionClock: number,
+  legworkClock: number,
+  directives: {[description: string]: boolean},
+}
 
-// const defaultMissionProps: CreateMissionProps = {
-//   actionClock: 0,
-//   legworkClock: 0,
-//   directives: {
-//     missionAccepted: false,
-//     missionCompleted: false,
-//   },
-// };
+const defaultMissionProps: CreateMissionProps = {
+  actionClock: 0,
+  legworkClock: 0,
+  directives: {
+    missionAccepted: false,
+    missionCompleted: false,
+  },
+};
 
-// function createMission(
-//   playerGroupId: string,
-//   props: CreateMissionProps = defaultMissionProps,
-// ): any {
-//   return db.collection('playerGroups').add({
-//     created: firebase.firestore.FieldValue.serverTimestamp(),
-//     ...props,
-//   });
-// }
+function createMission(
+  playerGroupId: string,
+  props: CreateMissionProps = defaultMissionProps,
+): any {
+  return db.collection('playerGroups').add({
+    created: firebase.firestore.FieldValue.serverTimestamp(),
+    ...props,
+  });
+}
 
-// function getMission(missionId: string): any {
-//   return db.collection('missions').doc(missionId).get();
-// }
+async function fetchMission(missionId: string): Promise<any> {
+  const output = await db.collection('missions').doc(missionId).get();
+  if (output.exists) return output.data();
+  console.error(`Couldn't fetch mission with id: ${missionId}`);
+  return null;
+}
 
-// function streamMission(missionId: string, observer: any): any {
-//   return db.collection('missions').doc(missionId).onSnapshot(observer);
-// }
+function streamMission(missionId: string, observer: any): any {
+  return db.collection('missions').doc(missionId).onSnapshot(observer);
+}
 
-export { createPlayerGroup, getPlayerGroup };
+export type { PlayerGroup, Mission };
+export { createMission, fetchMission, streamMission };
+export { createPlayerGroup, fetchPlayerGroup };

@@ -1,4 +1,5 @@
 const cyberpunk = {
+  colorBackground: 'black',
   colorPrimary: 'hsl(180, 77%, 64%)',
   colorBackgroundPrimary: 'hsla(180, 77%, 64%, 0.5)',
 };
